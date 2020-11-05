@@ -1,5 +1,6 @@
 ﻿#include <iostream>
-#include <list>
+
+using namespace std;
 
 class Point2D {
 protected:
@@ -8,20 +9,20 @@ public:
 	Point2D() {
 		x = 0;
 		y = 0;
-		printf("Point2D()");
+		printf("Point2D()\n");
 	}
 	Point2D(double x, double y) {
 		this->x = x;
 		this->y = y;
-		printf("Point2D(double x, double y)");
+		printf("Point2D(double x, double y)\n");
 	}
 	Point2D(const Point2D& point) {
 		x = point.x;
 		y = point.y;
-		printf("Point2D(const Point2D &point)");
+		printf("Point2D(const Point2D &point)\n");
 	}
 	~Point2D() {
-		printf("~Point2D()");
+		printf("~Point2D()\n");
 	}
 	double getX() {
 		return x;
@@ -37,8 +38,81 @@ public:
 	}
 };
 
+class Figure2D {	// Хранилище
+protected:
+	Point2D** arr;	// Массив элементов
+	int max;	// Размер массива
+public:
+	Figure2D() {	// Конструктор
+		max = 1;
+		arr = new Point2D * [max];
+		printf("Figure2D()\n");
+	}
+	Figure2D(int count) {	// Конструктор
+		max = count;
+		arr = new Point2D * [max];
+		printf("Figure2D(int count)\n");
+	}
+	Figure2D(const Figure2D& figure) {	// Конструктор копирования
+		arr = new Point2D * [figure.max];
+		for (int i = 0; i < max; ++i) {
+			arr[i] = figure.arr[i];
+		}
+		printf("Figure2D(const Figure2D& figure)\n");
+	}
+	~Figure2D() {	// Деструктор
+		for (int i = max - 1; i > 0; --i) {
+			if (!isNull(i))
+				delete arr[i];
+		}
+		delete[] arr;
+		printf("~Figure2D()\n");
+	}
+	void add(Point2D* point) {	// Добавление элемента
+		int pos = 0;
+		while (!isNull(pos) && pos < max) {
+			pos++;
+		}
+		if (pos == max) {
+			max++;
+			Point2D** tmp = new Point2D * [max];
+			for (int i = 0; i < max - 1; ++i) {
+				if (!isNull(i))
+					tmp[i] = arr[i];
+			}
+			delete arr;
+			arr = tmp;
+		}
+		arr[pos] = point;
+	}
+	void setObject(int pos, Point2D* point) {	// Изменение элемента
+		arr[pos] = point;
+	}
+	Point2D getObject(int pos) {	// Получение элемента
+		return *arr[pos];
+	}
+	void delObject(int pos) {	// Удаление объекта
+		//Point2D** tmp = new Point2D * [max];
+		//for (int i = 0; i < max - 1; ++i) {
+		//	if (!isNull(i))
+		//		tmp[i] = arr[i];
+		//}
+		//tmp[pos] = NULL;
+		//delete arr;
+		//arr = tmp;
+	}
+	int getCount() {	// Получение объекта
+		return max;
+	}
+	bool isNull(int pos) {	// Проверка наличия
+		if (arr[pos] != NULL)
+			return false;
+		return true;
+	}
+
+};
+
 int main()
 {
-
 	return 0;
 }
