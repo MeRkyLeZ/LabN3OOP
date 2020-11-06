@@ -41,29 +41,34 @@ public:
 class Figure2D {	// Хранилище
 protected:
 	Point2D** arr;	// Массив элементов
-	int max;	// Размер массива
+	unsigned int size;	// Размер массива
+	int count;	// Количество элментво
 public:
 	Figure2D() {	// Конструктор
-		max = 1;
-		arr = new Point2D * [max];
+		size = 0;
+		count = 0;
+		arr = new Point2D * [size];
 		init();
 		printf("Figure2D()\n");
 	}
-	Figure2D(int count) {	// Конструктор
-		max = count;
-		arr = new Point2D * [max];
+	Figure2D(unsigned int size) {	// Конструктор
+		this->size = size;
+		count = 0;
+		arr = new Point2D * [size];
 		init();
-		printf("Figure2D(int count)\n");
+		printf("Figure2D(int size)\n");
 	}
 	Figure2D(const Figure2D& figure) {	// Конструктор копирования
-		arr = new Point2D * [figure.max];
-		for (int i = 0; i < max; ++i) {
-			arr[i] = figure.arr[i];
+		arr = new Point2D * [figure.size];
+		this->size = figure.size;
+		this->count = figure.count;
+		for (int i = 0; i < size; ++i) {
+			arr[i] = new Point2D(*figure.arr[i]);
 		}
 		printf("Figure2D(const Figure2D& figure)\n");
 	}
 	~Figure2D() {	// Деструктор
-		for (int i = 0; i < max; ++i) {
+		for (int i = 0; i < size; ++i) {
 			if (!isNull(i))
 				delete arr[i];
 			arr[i] = 0;
@@ -71,21 +76,27 @@ public:
 		delete[] arr;
 		printf("~Figure2D()\n");
 	}
-	void add(Point2D* point) {	// Добавление элемента
+	void addObject(Point2D* point) {	// Добавление элемента
 		int pos = 0;
-		while (!isNull(pos) && pos < max) {
+		while (!isNull(pos) && pos < size) {
 			pos++;
 		}
-		if (pos == max) {
-			max++;
-			Point2D** tmp = new Point2D * [max];
-			for (int i = 0; i < max - 1; ++i) {
+		if (pos == size) {
+			size++;
+			Point2D** tmp = new Point2D * [size];
+			for (int i = 0; i < size - 1; ++i) {
 				tmp[i] = arr[i];
 			}
 			delete[] arr;
 			arr = tmp;
 		}
 		arr[pos] = point;
+		count++;
+	}
+	void delObject(int pos) {	// Удаление объекта
+		delete arr[pos];
+		arr[pos] = 0;
+		count--;
 	}
 	void setObject(int pos, Point2D* point) {	// Изменение элемента
 		arr[pos] = point;
@@ -93,12 +104,11 @@ public:
 	Point2D& getObject(int pos) {	// Получение элемента
 		return *arr[pos];
 	}
-	void delObject(int pos) {	// Удаление объекта
-		delete arr[pos];
-		arr[pos] = 0;
+	int getCount() {	// Получение количества объектов
+		return count;
 	}
-	int getCount() {	// Получение объекта
-		return max;
+	int getSize() {	// Получение размера хранилища
+		return size;
 	}
 	bool isNull(int pos) {	// Проверка наличия
 		if (arr[pos] == 0)
@@ -107,7 +117,7 @@ public:
 	}
 private:
 	void init() {	// Инициализация элементов
-		for (int i = 0; i < max; ++i) {
+		for (int i = 0; i < size; ++i) {
 			arr[i] = 0;
 		}
 	}
