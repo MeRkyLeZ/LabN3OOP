@@ -4,26 +4,26 @@
 
 using namespace std;
 
-class Point2D {
+class Point2D {	// Объект
 protected:
 	double x, y;
 public:
-	Point2D() {
+	Point2D() {	// Конструктор
 		x = 0;
 		y = 0;
 		//printf("Point2D()\n");
 	}
-	Point2D(double x, double y) {
+	Point2D(double x, double y) {	// Конструктор
 		this->x = x;
 		this->y = y;
 		//printf("Point2D(double x, double y)\n");
 	}
-	Point2D(const Point2D& point) {
+	Point2D(const Point2D& point) {	// Конструктор копирования
 		this->x = point.x;
 		this->y = point.y;
 		//printf("Point2D(const Point2D &point)\n");
 	}
-	~Point2D() {
+	~Point2D() {	// Деструктор
 		//printf("~Point2D()\n");
 	}
 	double getX() {
@@ -126,17 +126,17 @@ private:
 };
 
 void Test(int count) {	// Проверка работы
-	// создаем хранилище
+	//	Создаем хранилище
 	Figure2D* figure;
 	figure = new Figure2D(count);
-	// добавляем в него объекты
+	//	Добавляем в него объекты
 	for (int i = 0; i < figure->getSize(); ++i)
 		figure->setObject(i, new Point2D());
-	// обращаемся поочередно к элементам
+	//	Обращаемся поочередно к элементам
 	for (int i = 0; i < figure->getSize(); ++i) {
 		srand(time(0));
 		int key = rand() % 4 + 1;
-		switch (key) {
+		switch (key) {	// Выполняем случайные методы
 		case 1: figure->getObject(i).setX(rand() % 51); break;
 		case 2: figure->getObject(i).setY(rand() % 51); break;
 		case 3: figure->getObject(rand() % figure->getSize() - 1).getX(); break;
