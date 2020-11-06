@@ -17,8 +17,8 @@ public:
 		printf("Point2D(double x, double y)\n");
 	}
 	Point2D(const Point2D& point) {
-		x = point.x;
-		y = point.y;
+		this->x = point.x;
+		this->y = point.y;
 		printf("Point2D(const Point2D &point)\n");
 	}
 	~Point2D() {
@@ -46,11 +46,13 @@ public:
 	Figure2D() {	// Конструктор
 		max = 1;
 		arr = new Point2D * [max];
+		init();
 		printf("Figure2D()\n");
 	}
 	Figure2D(int count) {	// Конструктор
 		max = count;
 		arr = new Point2D * [max];
+		init();
 		printf("Figure2D(int count)\n");
 	}
 	Figure2D(const Figure2D& figure) {	// Конструктор копирования
@@ -61,9 +63,10 @@ public:
 		printf("Figure2D(const Figure2D& figure)\n");
 	}
 	~Figure2D() {	// Деструктор
-		for (int i = max - 1; i > 0; --i) {
+		for (int i = 0; i < max; ++i) {
 			if (!isNull(i))
 				delete arr[i];
+			arr[i] = 0;
 		}
 		delete[] arr;
 		printf("~Figure2D()\n");
@@ -77,10 +80,9 @@ public:
 			max++;
 			Point2D** tmp = new Point2D * [max];
 			for (int i = 0; i < max - 1; ++i) {
-				if (!isNull(i))
-					tmp[i] = arr[i];
+				tmp[i] = arr[i];
 			}
-			delete arr;
+			delete[] arr;
 			arr = tmp;
 		}
 		arr[pos] = point;
@@ -88,31 +90,31 @@ public:
 	void setObject(int pos, Point2D* point) {	// Изменение элемента
 		arr[pos] = point;
 	}
-	Point2D getObject(int pos) {	// Получение элемента
+	Point2D& getObject(int pos) {	// Получение элемента
 		return *arr[pos];
 	}
 	void delObject(int pos) {	// Удаление объекта
-		//Point2D** tmp = new Point2D * [max];
-		//for (int i = 0; i < max - 1; ++i) {
-		//	if (!isNull(i))
-		//		tmp[i] = arr[i];
-		//}
-		//tmp[pos] = NULL;
-		//delete arr;
-		//arr = tmp;
+		delete arr[pos];
+		arr[pos] = 0;
 	}
 	int getCount() {	// Получение объекта
 		return max;
 	}
 	bool isNull(int pos) {	// Проверка наличия
-		if (arr[pos] != NULL)
-			return false;
-		return true;
+		if (arr[pos] == 0)
+			return true;
+		return false;
 	}
-
+private:
+	void init() {	// Инициализация элементов
+		for (int i = 0; i < max; ++i) {
+			arr[i] = 0;
+		}
+	}
 };
 
 int main()
 {
+
 	return 0;
 }
