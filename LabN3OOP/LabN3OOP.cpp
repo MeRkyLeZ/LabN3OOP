@@ -95,15 +95,25 @@ public:
 		arr[pos] = point;
 		count++;
 	}
-	void delObject(int pos) {	// Удаление объекта
+	void delObject(unsigned int pos) {	// Удаление объекта
 		delete arr[pos];
 		arr[pos] = 0;
 		count--;
 	}
-	void setObject(int pos, Point2D* point) {	// Изменение элемента
+	void setObject(unsigned int pos, Point2D* point) {	// Изменение элемента
+		if (pos >= size) {
+			size = pos + 1;
+			Point2D** tmp = new Point2D * [size];
+			for (int i = 0; i < size - 1; ++i) {
+				tmp[i] = arr[i];
+			}
+			delete[] arr;
+			arr = tmp;
+		}
+		delete arr[pos];
 		arr[pos] = point;
 	}
-	Point2D& getObject(int pos) {	// Получение элемента
+	Point2D& getObject(unsigned int pos) {	// Получение элемента
 		return *arr[pos];
 	}
 	int getCount() {	// Получение количества объектов
@@ -112,7 +122,7 @@ public:
 	int getSize() {	// Получение размера хранилища
 		return size;
 	}
-	bool isNull(int pos) {	// Проверка наличия
+	bool isNull(unsigned int pos) {	// Проверка наличия
 		if (arr[pos] == 0)
 			return true;
 		return false;
@@ -125,22 +135,33 @@ private:
 	}
 };
 
+void randMethod(Point2D point) {	// Случайный метод объекта
+	srand(time(0));
+	int key = rand() % 4 + 1;
+	switch (key) {	// Выполняем случайные методы
+	case 1: point.getX(); break;
+	case 2: point.getY(); break;
+	case 3: point.setX(rand() % 51); break;
+	case 4: point.setY(rand() % 51); break;
+	}
+}
+
 void Test(int count) {	// Проверка работы
-	//	Создаем хранилище
-	Figure2D* figure;
-	figure = new Figure2D(count);
-	//	Добавляем в него объекты
-	for (int i = 0; i < figure->getSize(); ++i)
+	Figure2D* figure;	// Создаем хранилище
+	figure = new Figure2D(10);
+	for (int i = 0; i < figure->getSize(); ++i)	// Добавляем в него объекты
 		figure->setObject(i, new Point2D());
-	//	Обращаемся поочередно к элементам
-	for (int i = 0; i < figure->getSize(); ++i) {
+	for (int i = 0; i < count; ++i) {	// Обращаемся поочередно к элементам
 		srand(time(0));
-		int key = rand() % 4 + 1;
+		int key = rand() % 7 + 1;
 		switch (key) {	// Выполняем случайные методы
-		case 1: figure->getObject(i).setX(rand() % 51); break;
-		case 2: figure->getObject(i).setY(rand() % 51); break;
-		case 3: figure->getObject(rand() % figure->getSize() - 1).getX(); break;
-		case 4: figure->getObject(rand() % figure->getSize() - 1).getY(); break;
+		case 1: figure->addObject(new Point2D); break;
+		case 2: figure->delObject(rand() % (figure->getSize() - 1)); break;
+		case 3: figure->setObject(rand() % (figure->getSize() - 1), new Point2D); break;
+		case 4: randMethod(figure->getObject(rand() % (figure->getSize() - 1))); break;
+		case 5: figure->getCount(); break;
+		case 6: figure->getSize(); break;
+		case 7: figure->isNull(rand() % (figure->getSize() - 1)); break;
 		}
 	}
 	delete figure;
