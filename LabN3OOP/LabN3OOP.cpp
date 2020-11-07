@@ -44,7 +44,7 @@ class Figure2D {	// Хранилище
 protected:
 	Point2D** arr;	// Массив элементов
 	unsigned int size;	// Размер массива
-	int count;	// Количество элментво
+	int count;	// Количество элементов
 public:
 	Figure2D() {	// Конструктор
 		size = 0;
@@ -168,8 +168,6 @@ void Test(int count) {	// Проверка работы
 	}
 	delete figure;
 }
-
-
 
 int main()
 {
