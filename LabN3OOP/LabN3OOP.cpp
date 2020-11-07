@@ -50,14 +50,14 @@ public:
 		size = 0;
 		count = 0;
 		arr = new Point2D * [size];
-		init();
+		init(0);
 		//printf("Figure2D()\n");
 	}
 	Figure2D(unsigned int size) {	// Конструктор
 		this->size = size;
 		count = 0;
 		arr = new Point2D * [size];
-		init();
+		init(0);
 		//printf("Figure2D(int size)\n");
 	}
 	Figure2D(const Figure2D& figure) {	// Конструктор копирования
@@ -102,6 +102,7 @@ public:
 	}
 	void setObject(unsigned int pos, Point2D* point) {	// Изменение элемента
 		if (pos >= size) {
+			int oldsize = size;
 			size = pos + 1;
 			Point2D** tmp = new Point2D * [size];
 			for (int i = 0; i < size - 1; ++i) {
@@ -109,6 +110,7 @@ public:
 			}
 			delete[] arr;
 			arr = tmp;
+			init(oldsize);
 		}
 		delete arr[pos];
 		arr[pos] = point;
@@ -128,8 +130,8 @@ public:
 		return false;
 	}
 private:
-	void init() {	// Инициализация элементов
-		for (int i = 0; i < size; ++i) {
+	void init(int start) {	// Инициализация элементов
+		for (int i = start; i < size; ++i) {
 			arr[i] = 0;
 		}
 	}
